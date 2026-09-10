@@ -124,7 +124,6 @@ function begin(){document.getElementById("start").style.display="none";document.
 function addNav(){
  const f=document.getElementById("quiz");
  let nav=document.createElement("div");nav.className="nav";nav.id="nav";
- // 修改点1：按钮ID改为 nextBtn，onclick改为 goNext()
  nav.innerHTML='<button type="button" class="secondary" onclick="prev()">上一题</button><button type="button" class="primary" id="nextBtn" onclick="goNext()">下一题</button>';
  f.appendChild(nav);
 }
@@ -132,15 +131,12 @@ function showQuestion(i){
  current=i;
  document.querySelectorAll(".question").forEach((el,n)=>el.style.display=n===i?"block":"none");
  const nav=document.getElementById("nav"); if(nav) nav.style.display="flex";
- // 修改点2：获取 nextBtn 元素
  const nextBtn=document.getElementById("nextBtn"); if(nextBtn) nextBtn.textContent=i===11?"查看结果 ✨":"下一题";
  let top=document.querySelector(".topbar"); if(!top){top=document.createElement("div");top.className="topbar";top.innerHTML='<div class="progress-row"><span id="ptext"></span><span>凭第一感觉就好</span></div><div class="progress"><i id="pbar"></i></div>';document.getElementById("quiz").prepend(top)}
  document.getElementById("ptext").textContent=`第 ${i+1} / 12 题`;
  document.getElementById("pbar").style.width=((i+1)/12*100)+"%";
 }
-// 修改点3：progress 函数里获取 nextBtn
 function progress(){document.getElementById("nextBtn").disabled=false}
-// 修改点4：翻页函数名改为 goNext
 function goNext(){const chosen=document.querySelector(`input[name="q${current}"]:checked`);if(!chosen){alert("先选一个最符合你的选项吧 💗");return} if(current<11){showQuestion(current+1);scrollTo({top:0,behavior:"smooth"})}else calc()}
 function prev(){if(current>0){showQuestion(current-1);scrollTo({top:0,behavior:"smooth"})}}
 function calc(){
@@ -150,7 +146,65 @@ function calc(){
  let code=codePart(s1,"I","E")+codePart(s2,"R","H")+codePart(s3,"C","L");
  const p=profiles[code];
  document.getElementById("quiz").style.display="none";document.getElementById("result").style.display="block";
- if(!p){document.getElementById("rcode").textContent=code;document.getElementById("rtitle").textContent="中间型";document.getElementById("rscores").textContent=`三轴得分：${s1} / ${s2} / ${s3}`;document.getElementById("aiquote").textContent="你刚好落在至少一个维度的中间地带。";document.getElementById("aidesc").textContent="这意味着你没有被八种极端组合中的任何一种完全概括。你可能会根据情境，在不同的欲望表达、行动张力与自我约束之间移动。";document.getElementById("own").textContent="你没有被塞进八个盒子里的任何一个，恭喜你获得了中间地带居民证。";document.getElementById("tags").innerHTML='<span class="tag">中间型</span><span class="tag">情境弹性</span>';document.getElementById("groups").textContent="你没有严格落入预设的八型，因此也不强行归组。";document.getElementById("axes").innerHTML=axisHTML(s1,s2,s3);scrollTo({top:0,behavior:"smooth"});return}
+ 
+ // 1. 兜底逻辑：处理所有包含 M 的情况
+ if(!p){
+     // ================= MMM 专属拦截 =================
+     if (code === "MMM") {
+         document.getElementById("rcode").textContent = code;
+         document.getElementById("rtitle").textContent = "未定义之域 · 自由的变色龙";
+         document.getElementById("rscores").textContent = `三轴得分：${s1} / ${s2} / ${s3}`;
+         document.getElementById("aiquote").textContent = "你不属于任何一个固定的盒子，你是水本身。";
+         document.getElementById("aidesc").innerHTML = "你的三个维度都精准地落在了完美的中点（均为12分）。这意味着你拥有惊人的包容力和情境适应力。你可以理解极端隐忍的人，也能体会极度冲动的人；你既能欣赏精神恋爱，也不排斥肉体欢愉。<br><br>你没有固定的‘人设’，因为你的自我是流动的。这并非没有性格，而是性格的‘万花筒’。面对不同的人，你会自然而然地展现出不同的侧面。";
+         document.getElementById("own").textContent = "恭喜你解锁了隐藏款人格！你不是墙头草，你是掌控平衡的端水大师。唯一的建议是：在面对非常确定的选择时，偶尔试着让自己彻底倒向一边，也许会有全新的体验哦～";
+         document.getElementById("tags").innerHTML = '<span class="tag">隐藏款</span><span class="tag">千人千面</span><span class="tag">自由的变色龙</span><span class="tag">端水大师</span>';
+         document.getElementById("groups").textContent = "你不属于任何预设分组，你就是你自己，一个完整且流动的宇宙。";
+         document.getElementById("axes").innerHTML = axisHTML(s1, s2, s3);
+         scrollTo({top:0,behavior:"smooth"});
+         return;
+     }
+     // ================= MMM 拦截结束 =================
+
+     // 2. 普通区间型逻辑（有1个或2个 M）
+     let midAxes = [];
+     if(s1 === 12) midAxes.push("隐忍 ↔ 冲动");
+     if(s2 === 12) midAxes.push("压抑 ↔ 袒露");
+     if(s3 === 12) midAxes.push("贞洁 ↔ 淫棍");
+     
+     let prefix = code[0] === 'M' ? ['I', 'E'] : [code[0]];
+     let middle = code[1] === 'M' ? ['R', 'H'] : [code[1]];
+     let suffix = code[2] === 'M' ? ['C', 'L'] : [code[2]];
+     let possibleCodes = [];
+     for(let a of prefix) for(let b of middle) for(let c of suffix) possibleCodes.push(a+b+c);
+
+     let possibleTitles = possibleCodes.map(c => profiles[c]?.title || "").filter(Boolean);
+     let possibleQuotes = possibleCodes.map(c => profiles[c]?.quote || "").filter(Boolean);
+     let titleText = possibleTitles.join(" / ");
+     let quotesText = possibleTitles.map((t,i) => `<strong>${t}</strong>（${possibleQuotes[i]}）`).join("、");
+     let axisText = midAxes.join("、");
+
+     document.getElementById("rcode").textContent = code;
+     document.getElementById("rtitle").textContent = "区间型 · " + titleText;
+     document.getElementById("rscores").textContent = `三轴得分：${s1} / ${s2} / ${s3}`;
+     document.getElementById("aiquote").textContent = "你刚好踩在了左右两端的中点上。";
+     document.getElementById("aidesc").innerHTML = `你在【${axisText}】维度上刚好达到了完美的平衡（得分为12）。这意味着你没有被某一个极端完全定义，你其实介于这几个角色之间：<br><br>👉 ${quotesText}<br><br>你可以对照上面几个角色的描述，看看哪一种更像你内心的自己。你拥有极高的情境适应力，可以在不同状态下自由切换。`;
+     document.getElementById("own").textContent = "你是罕见的“多面手”！不偏不倚，可以勇敢，也可以内敛。哪一边的描述让你觉得“这就是我”，那你此刻的心境就更偏向哪一边～";
+     document.getElementById("tags").innerHTML = '<span class="tag">区间型</span><span class="tag">情境弹性</span><span class="tag">多面手</span>';
+     
+     let belong = [];
+     for(const [name, codes] of Object.entries(groups)){
+         if (possibleCodes.some(c => codes.includes(c))) belong.push(name);
+     }
+     document.getElementById("groups").innerHTML = belong.length > 0 
+         ? belong.map(x => `<span class="tag">${x}</span>`).join(" ") 
+         : "你不强行属于任何一个预设组，自由流动就是你的特色。";
+         
+     document.getElementById("axes").innerHTML = axisHTML(s1,s2,s3);
+     scrollTo({top:0,behavior:"smooth"});
+     return;
+ }
+ 
+ // 3. 正常八型逻辑
  document.getElementById("rcode").textContent=code;
  document.getElementById("rtitle").textContent=p.title;
  document.getElementById("rscores").textContent=`三轴得分：${s1} / ${s2} / ${s3}`;
