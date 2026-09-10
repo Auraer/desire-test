@@ -124,20 +124,24 @@ function begin(){document.getElementById("start").style.display="none";document.
 function addNav(){
  const f=document.getElementById("quiz");
  let nav=document.createElement("div");nav.className="nav";nav.id="nav";
- nav.innerHTML='<button type="button" class="secondary" onclick="prev()">上一题</button><button type="button" class="primary" id="next" onclick="next()">下一题</button>';
+ // 修改点1：按钮ID改为 nextBtn，onclick改为 goNext()
+ nav.innerHTML='<button type="button" class="secondary" onclick="prev()">上一题</button><button type="button" class="primary" id="nextBtn" onclick="goNext()">下一题</button>';
  f.appendChild(nav);
 }
 function showQuestion(i){
  current=i;
  document.querySelectorAll(".question").forEach((el,n)=>el.style.display=n===i?"block":"none");
  const nav=document.getElementById("nav"); if(nav) nav.style.display="flex";
- const next=document.getElementById("next"); if(next) next.textContent=i===11?"查看结果 ✨":"下一题";
+ // 修改点2：获取 nextBtn 元素
+ const nextBtn=document.getElementById("nextBtn"); if(nextBtn) nextBtn.textContent=i===11?"查看结果 ✨":"下一题";
  let top=document.querySelector(".topbar"); if(!top){top=document.createElement("div");top.className="topbar";top.innerHTML='<div class="progress-row"><span id="ptext"></span><span>凭第一感觉就好</span></div><div class="progress"><i id="pbar"></i></div>';document.getElementById("quiz").prepend(top)}
  document.getElementById("ptext").textContent=`第 ${i+1} / 12 题`;
  document.getElementById("pbar").style.width=((i+1)/12*100)+"%";
 }
-function progress(){document.getElementById("next").disabled=false}
-function next(){const chosen=document.querySelector(`input[name="q${current}"]:checked`);if(!chosen){alert("先选一个最符合你的选项吧 💗");return} if(current<11){showQuestion(current+1);scrollTo({top:0,behavior:"smooth"})}else calc()}
+// 修改点3：progress 函数里获取 nextBtn
+function progress(){document.getElementById("nextBtn").disabled=false}
+// 修改点4：翻页函数名改为 goNext
+function goNext(){const chosen=document.querySelector(`input[name="q${current}"]:checked`);if(!chosen){alert("先选一个最符合你的选项吧 💗");return} if(current<11){showQuestion(current+1);scrollTo({top:0,behavior:"smooth"})}else calc()}
 function prev(){if(current>0){showQuestion(current-1);scrollTo({top:0,behavior:"smooth"})}}
 function calc(){
  let a=[];for(let i=0;i<12;i++){let x=document.querySelector(`input[name="q${i}"]:checked`);if(!x){showQuestion(i);return}a.push(+x.value)}
