@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7fb">
+<title>欲望偏好测试｜来看一看你到底是圣女还是__</title>
+<style>
+:root{--pink:#d75a89;--ink:#332831;--muted:#806b76;--line:#eadce4;--paper:#fff;--bg:#fff7fb}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7fb 0%,#fff 55%,#fff7fb 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+main{max-width:720px;margin:auto;padding:28px 18px 60px}.hero{text-align:center;padding:28px 8px 20px}.heart{font-size:25px;letter-spacing:5px}.eyebrow{color:var(--pink);font-size:13px;font-weight:700;letter-spacing:.12em;margin-top:12px}
+h1{font-size:30px;line-height:1.2;margin:12px 0 10px;letter-spacing:-.03em}.hero p{color:var(--muted);margin:0 auto;max-width:580px}
+.start,.question,.result-card,.group-card,.method{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 30px rgba(80,40,60,.06)}
+.start{padding:22px;margin:18px 0}.start strong{color:var(--pink)}.rules{display:grid;gap:9px;margin-top:14px;font-size:14px;color:#65535d}
+button{font:inherit}.primary{width:100%;border:0;border-radius:15px;background:var(--pink);color:white;padding:14px 18px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 8px 20px rgba(215,90,137,.2)}
+#quiz{display:none}.topbar{position:sticky;top:0;z-index:5;background:rgba(255,247,251,.92);backdrop-filter:blur(10px);padding:10px 0 12px}.progress-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px}.progress{height:7px;background:#f0e4e9;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--pink);transition:.25s}
+.question{padding:22px;margin:16px 0}.qnum{font-size:12px;font-weight:800;color:var(--pink);letter-spacing:.08em}.qtext{font-size:18px;line-height:1.55;font-weight:700;margin:8px 0 14px}.reverse{font-size:12px;color:var(--pink);font-weight:600}
+.options{display:grid;gap:9px}.option{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:13px;padding:12px;cursor:pointer;transition:.15s;background:#fff}.option:hover{border-color:#df9ab4;background:#fff9fc}.option input{accent-color:var(--pink);width:18px;height:18px}.option:has(input:checked){border-color:#df8eac;background:#fff0f6}
+.nav{display:flex;gap:10px}.secondary{flex:1;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:14px;padding:13px;font-weight:700;cursor:pointer}.nav .primary{flex:2}
+#result{display:none}.result-head{text-align:center;padding:26px 8px 10px}.result-code{color:var(--pink);font-weight:800;letter-spacing:.12em;font-size:13px}.result-title{font-size:28px;font-weight:850;margin:8px 0}.result-scores{color:var(--muted);font-size:14px}.result-card,.group-card,.method{padding:20px;margin:14px 0}.result-card h2,.group-card h2{font-size:18px;margin:0 0 10px}.result-card p,.group-card p{margin:8px 0;color:#56464f;line-height:1.75}.quote{font-size:16px;font-weight:700;color:#49343e!important}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.tag{padding:6px 10px;border-radius:999px;background:#fff0f6;color:#9c3f65;font-size:12px;font-weight:700}.axis{display:grid;gap:10px;margin-top:14px}.axisline{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.bar{height:8px;border-radius:99px;background:#f0e4e9;overflow:hidden}.bar i{display:block;height:100%;background:var(--pink)}
+.small{font-size:12px!important;color:#8b7b84!important}.restart{margin-top:18px}.hidden{display:none}
+@media(max-width:480px){main{padding:20px 14px 50px}h1{font-size:27px}.question{padding:18px}.qtext{font-size:17px}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+  <div class="heart">💗💗💗</div>
+  <div class="eyebrow">欲望偏好测试</div>
+  <h1>来看一看你到底是圣女还是__</h1>
+  <p>12 道题，三个维度，八种人物原型。<br>没有正确答案，请凭第一感觉选择。</p>
+</section>
+
+<section id="start" class="start">
+  <strong>怎么玩？</strong>
+  <div class="rules">
+    <div>① 每题五个选项：非常符合 / 符合 / 不确定 / 不符合 / 非常不符合</div>
+    <div>② 普通题计分为 5 / 4 / 3 / 2 / 1</div>
+    <div>③ 标有「反向计分」的 Q2：计分为 1 / 2 / 3 / 4 / 5</div>
+    <div>④ 1–4 题看「隐忍 ↔ 冲动」；5–8 题看「压抑 ↔ 袒露」；9–12 题看「贞洁 ↔ 淫棍」</div>
+  </div>
+  <button class="primary" style="margin-top:18px" onclick="begin()">开始测试 💗</button>
+</section>
+
+<form id="quiz"></form>
+
+<section id="result">
+  <div class="result-head">
+    <div class="result-code" id="rcode"></div>
+    <div class="result-title" id="rtitle"></div>
+    <div class="result-scores" id="rscores"></div>
+  </div>
+  <div class="result-card">
+    <h2>你的 AI 人物侧写</h2>
+    <p id="aiquote" class="quote"></p>
+    <p id="aidesc"></p>
+    <div class="tags" id="tags"></div>
+  </div>
+  <div class="result-card">
+    <h2>你的三条轴</h2>
+    <div class="axis" id="axes"></div>
+  </div>
+  <div class="result-card">
+    <h2>你的趣味点评</h2>
+    <p id="own"></p>
+  </div>
+  <div class="group-card">
+    <h2>你还属于这些组</h2>
+    <p id="groups"></p>
+  </div>
+  <div class="method">
+    <p class="small">🔗 “分享我的结果”会生成带结果代码的链接；把本网页部署成公开网址后，朋友打开分享链接即可看到对应结果。</p><p class="small">💗 本测试是趣味性人物侧写，不是临床心理测验，也不能用于诊断。它描述的是你在本组题目下呈现出的倾向组合，而不是固定的人格结论。</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px"><button class="secondary" onclick="shareResult()">分享我的结果</button><button class="primary restart" onclick="restart()">再测一次</button></div>
+</section>
+</main>
+
+<script>
+const qs=[
+["当我遇到很喜欢的人时，很难长时间按住心意，会想要尽快表露。",false],
+["做重要选择时，我会谨慎思考，反复权衡利弊，而不是容易受感受和直觉推动，临时做决定。",true],
+["一旦产生强烈的想法，我内心会有一股想要立刻付诸行动的张力。",false],
+["情绪时常波动，容易受突发情绪影响而产生上头的心境。",false],
+["面对强烈的负面情绪，我倾向向外倾诉表达，而非独自消化。",false],
+["在安全的公开场合谈及性需求时，我不会将其视作禁忌，可以大方地自由讨论。",false],
+["当内心升起欲望相关的感受时，我愿意正视它，而不是把它压下去。",false],
+["当对他人产生性欲的时候，我不会本能地感到愧疚或羞耻。",false],
+["肉体欲望本身就是人性的一部分，我会在产生性欲时尽量去满足它，而非克制。",false],
+["在日常生活中，相比于对精神的纯粹追求，我会更加在意或者花更多时间在追求肉体欲望上。",false],
+["看待性行为这件事，我反感用一套严苛统一的标准约束，对他人的性兴趣或追求持开放态度。",false],
+["如果可能的话，我愿意尝试主流之外小众的亲密方式。",false]
+];
+const opts=["非常符合","符合","不确定","不符合","非常不符合"];
+const normal=[5,4,3,2,1], reverse=[1,2,3,4,5];
+
+const profiles={
+IRC:{title:"隐忍压抑贞洁",quote:"静水深处的人",desc:"面对喜欢、冲动和欲望时，你更习惯先回到自己内部处理。你可能拥有丰富的情绪与想象，却不急于让别人看见。肉体欲望通常不是你的价值中心，你更容易把亲密理解为精神上的理解、陪伴、共鸣与意义。你最大的力量是内在世界的完整，可能的盲点则是太习惯自己解决一切，以至于别人很难知道你真正需要什么。",tags:["内省","克制","精神性","安静","深藏"],own:"擅长内省的圣女一枚，在情感与欲望面前静如水，或许对精神有着更极致的追求，倾向于自我约束，虽然没有太多外放而热烈的情绪，但偶尔也可以试着向外表达或者尝试探索一下自己内在的感受～"},
+IRL:{title:"隐忍压抑淫棍",quote:"沉默的欲望家",desc:"你能够坦然承认肉体欲望，却不一定需要立刻把它变成现实。欲望可以存在，但要经过自己的允许才进入行动。你可能比外表看起来大胆得多，同时很重视自我管理与边界。这种类型的成熟感，不在于欲望少，而在于能够同时容纳欲望和自持。",tags:["闷骚","自持","成熟","边界","隐藏的热度"],own:"你是一个冷静独立，习惯向内消化情绪且懂得自我管理，虽然在表达时会有些谨慎和保守，却能诚实坦然地面对自己的欲望，非常有成熟女人的韵味，或许还有一点小闷骚～"},
+ERC:{title:"冲动压抑贞洁",quote:"被自己拉住的纯爱战士",desc:"你的情绪与行动冲动可能很明显，但真正想追求的东西却未必是肉体上的。强烈的感情、喜欢和依恋可以占据很大空间，同时你又会努力控制自己。因此你很容易体验到“我很想表达，但我要不要现在做”的拉扯。你的热烈并不等于肉欲导向。",tags:["张力","热烈","纯爱","拉扯","心动"],own:"亲爱的纯爱小比（比格）！虽然你的情绪波澜起伏，但却很好地管理住了它们👀是不是时常感觉自己的内在被一股张力拉扯着呢？如果下次再有这样的感觉不妨试着把它表达出来吧～"},
+ERL:{title:"冲动压抑淫棍",quote:"欲望与自我控制的角力者",desc:"你同时拥有强烈的行动张力、对欲望的接纳，以及不愿让欲望完全决定行为的自我控制。你可能很诚实地知道自己想要什么，却仍然会问“我是否应该现在就去做”。因此，这一型并不只是放纵，反而可能是欲望意识与边界意识都很强的人。",tags:["张力","矛盾","欲望","自控","危险感"],own:"极致的内在矛盾者，既接纳欲望又拒绝被欲望束缚，只有自己心里清楚自己到底有多变态🚬希望你们的压抑值得忍耐，祝早日遇到想要被亲手戴上项圈的那个人～"},
+IHR:{title:"隐忍袒露贞洁",quote:"温柔而清醒的开放者",desc:"你可以谈论性、承认欲望，却不需要把承认等同于必须满足。你身上有一种很清楚的区分：开放地面对感受，同时保留行为选择。相比于肉体刺激，你可能更在意精神亲密与人与人之间真正的连接。",tags:["开放","温柔","清醒","精神亲密","分寸"],own:"虽然总是嘴上说着什么都懂，可实际心思和想法都非常之纯真洁净，既在观念上做到了开放地接纳肉体欲望，又在精神上有更加深刻的追求，隐形纯爱战士已出现～"},
+EHC:{title:"冲动袒露贞洁",quote:"热烈的纯爱主义者",desc:"你拥有强烈的情感与行动张力，也不太习惯隐藏自己的感受；喜欢就是喜欢，想念就是想念。但你的价值重心未必在肉体欲望，而更可能是精神共鸣、亲密与被理解。你的魅力来自让人真实地感受到“被喜欢”，而坦诚也意味着你会更容易暴露自己。",tags:["热烈","坦诚","纯爱","主动","真诚"],own:"热情洋溢版圣女，妥妥的纯爱战神！虽然你在情感与欲望的表现上都十分的诚实，内在却不会太过于看重肉体欲望，而是更多地期待着与他人产生精神上的共鸣，愿你的诚挚与纯粹可以打动心仪的那个人～"},
+EHL:{title:"冲动袒露淫棍",quote:"表里如一的欲望行动派",desc:"你的核心不是“性欲强”，而是欲望诚实：感受到什么，能够承认；想表达时，愿意表达；必要时，也愿意行动。你通常不喜欢和自己绕弯子。真正需要留意的是，“真实”并不意味着每一个冲动都值得立即执行；你的成长方向更像是在保持诚实的同时发展选择能力。",tags:["坦率","生命力","直接","勇敢","行动"],own:"恭喜你，达成内外表里如一的成就！不管是外在行为表现，还是内在体验都真挚而勇敢，无法对自己和他人说谎但也毫不内耗，但偶尔也可以考虑为另一半而稍微收敛一下自己的感受哦～"},
+IHL:{title:"隐忍袒露淫棍",quote:"沉敛的欲望掌舵者",desc:"你不害怕表达，也不会因为拥有欲望而感到羞耻，同时拥有较强的内在控制能力。你知道自己想要什么，也愿意告诉别人，但不会让欲望替自己做决定。你的魅力来自热度与距离、开放与分寸同时存在——欲望在你这里没有夺走方向盘。",tags:["沉敛","性感","自持","清醒","掌舵"],own:"呀，你很可能就是小说级别的霸道女主哦！虽然外在表现与内心的想法一致，但却能做到冷静而理智地分析和看待它们，敢于表达却行事稳重，试想谁会不喜欢沉敛的酷姐呢👄～"}
+};
+const groups={
+"闷骚组":["IRL","ERC","ERL"],
+"熟女组":["IRC","IRL","IHL"],
+"纯爱组":["IRC","ERC","EHC"],
+"火辣组":["ERC","ERL","EHL"]
+};
+function renderQuestions(){
+ const f=document.getElementById("quiz");
+ f.innerHTML=qs.map((q,i)=>`<div class="question" id="qcard${i}">
+ <div class="qnum">Q${i+1}</div>
+ <div class="qtext">${q[0]} ${q[1]?'<span class="reverse">（反向计分）</span>':''}</div>
+ <div class="options">${opts.map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${(q[1]?reverse:normal)[j]}" onchange="progress()"> ${o}</label>`).join("")}</div>
+ </div>`).join("");
+}
+renderQuestions();
+
+let current=0;
+function begin(){document.getElementById("start").style.display="none";document.getElementById("quiz").style.display="block";document.getElementById("result").style.display="none";addNav();scrollTo({top:0,behavior:"smooth"});showQuestion(0)}
+function addNav(){
+ const f=document.getElementById("quiz");
+ let nav=document.createElement("div");nav.className="nav";nav.id="nav";
+ nav.innerHTML='<button type="button" class="secondary" onclick="prev()">上一题</button><button type="button" class="primary" id="next" onclick="next()">下一题</button>';
+ f.appendChild(nav);
+}
+function showQuestion(i){
+ current=i;
+ document.querySelectorAll(".question").forEach((el,n)=>el.style.display=n===i?"block":"none");
+ const nav=document.getElementById("nav"); if(nav) nav.style.display="flex";
+ const next=document.getElementById("next"); if(next) next.textContent=i===11?"查看结果 ✨":"下一题";
+ let top=document.querySelector(".topbar"); if(!top){top=document.createElement("div");top.className="topbar";top.innerHTML='<div class="progress-row"><span id="ptext"></span><span>凭第一感觉就好</span></div><div class="progress"><i id="pbar"></i></div>';document.getElementById("quiz").prepend(top)}
+ document.getElementById("ptext").textContent=`第 ${i+1} / 12 题`;
+ document.getElementById("pbar").style.width=((i+1)/12*100)+"%";
+}
+function progress(){document.getElementById("next").disabled=false}
+function next(){const chosen=document.querySelector(`input[name="q${current}"]:checked`);if(!chosen){alert("先选一个最符合你的选项吧 💗");return} if(current<11){showQuestion(current+1);scrollTo({top:0,behavior:"smooth"})}else calc()}
+function prev(){if(current>0){showQuestion(current-1);scrollTo({top:0,behavior:"smooth"})}}
+function calc(){
+ let a=[];for(let i=0;i<12;i++){let x=document.querySelector(`input[name="q${i}"]:checked`);if(!x){showQuestion(i);return}a.push(+x.value)}
+ let s1=a.slice(0,4).reduce((x,y)=>x+y,0),s2=a.slice(4,8).reduce((x,y)=>x+y,0),s3=a.slice(8).reduce((x,y)=>x+y,0);
+ const codePart=(s,low,high)=>s<12?low:s>12?high:"M";
+ let code=codePart(s1,"I","E")+codePart(s2,"R","H")+codePart(s3,"C","L");
+ const p=profiles[code];
+ document.getElementById("quiz").style.display="none";document.getElementById("result").style.display="block";
+ if(!p){document.getElementById("rcode").textContent=code;document.getElementById("rtitle").textContent="中间型";document.getElementById("rscores").textContent=`三轴得分：${s1} / ${s2} / ${s3}`;document.getElementById("aiquote").textContent="你刚好落在至少一个维度的中间地带。";document.getElementById("aidesc").textContent="这意味着你没有被八种极端组合中的任何一种完全概括。你可能会根据情境，在不同的欲望表达、行动张力与自我约束之间移动。";document.getElementById("own").textContent="你没有被塞进八个盒子里的任何一个，恭喜你获得了中间地带居民证。";document.getElementById("tags").innerHTML='<span class="tag">中间型</span><span class="tag">情境弹性</span>';document.getElementById("groups").textContent="你没有严格落入预设的八型，因此也不强行归组。";document.getElementById("axes").innerHTML=axisHTML(s1,s2,s3);scrollTo({top:0,behavior:"smooth"});return}
+ document.getElementById("rcode").textContent=code;
+ document.getElementById("rtitle").textContent=p.title;
+ document.getElementById("rscores").textContent=`三轴得分：${s1} / ${s2} / ${s3}`;
+ document.getElementById("aiquote").textContent=p.quote;
+ document.getElementById("aidesc").textContent=p.desc;
+ document.getElementById("own").textContent=p.own;
+ document.getElementById("tags").innerHTML=p.tags.map(x=>`<span class="tag">${x}</span>`).join("");
+ document.getElementById("axes").innerHTML=axisHTML(s1,s2,s3);
+ let belong=[];for(const [name,codes] of Object.entries(groups))if(codes.includes(code))belong.push(name);
+ document.getElementById("groups").innerHTML=belong.map(x=>`<span class="tag">${x}</span>`).join(" ");
+ scrollTo({top:0,behavior:"smooth"});
+}
+function axisHTML(a,b,c){
+ const row=(l,r,v)=>`<div><div class="axisline"><span>${l}</span><span>${v} / 20</span><span>${r}</span></div><div class="bar"><i style="width:${v/20*100}%"></i></div></div>`;
+ return row("隐忍","冲动",a)+row("压抑","袒露",b)+row("贞洁","淫棍",c);
+}
+
+function shareResult(){
+  const code=document.getElementById("rcode").textContent;
+  const url=new URL(location.href);
+  url.hash="result="+encodeURIComponent(code);
+  if(navigator.share){
+    navigator.share({title:"欲望偏好测试",text:"我的测试结果是："+document.getElementById("rtitle").textContent+"（"+code+"）",url:url.toString()}).catch(()=>{});
+  }else{
+    navigator.clipboard?.writeText(url.toString()).then(()=>alert("结果链接已复制！发给朋友就可以打开。")).catch(()=>prompt("复制这个结果链接：",url.toString()));
+  }
+}
+
+// 打开分享链接时直接展示对应结果
+(function(){
+  const m=location.hash.match(/result=([A-Z]{3})/);
+  if(!m) return;
+  const code=m[1], p=profiles[code];
+  if(!p) return;
+  document.getElementById("start").style.display="none";
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("result").style.display="block";
+  document.getElementById("rcode").textContent=code;
+  document.getElementById("rtitle").textContent=p.title;
+  document.getElementById("rscores").textContent="来自好友的分享结果";
+  document.getElementById("aiquote").textContent=p.quote;
+  document.getElementById("aidesc").textContent=p.desc;
+  document.getElementById("own").textContent=p.own;
+  document.getElementById("tags").innerHTML=p.tags.map(x=>`<span class="tag">${x}</span>`).join("");
+  let belong=[];
+  for(const [name,codes] of Object.entries(groups)) if(codes.includes(code)) belong.push(name);
+  document.getElementById("groups").innerHTML=belong.map(x=>`<span class="tag">${x}</span>`).join(" ");
+  document.getElementById("axes").closest(".result-card").style.display="none";
+})();
+
+function restart(){document.getElementById("result").style.display="none";document.getElementById("start").style.display="block";document.querySelectorAll("input").forEach(x=>x.checked=false);scrollTo({top:0,behavior:"smooth"})}
+</script>
+</body>
+</html>
